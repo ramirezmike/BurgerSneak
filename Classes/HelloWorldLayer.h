@@ -17,6 +17,9 @@
 	Boss* boss1;
 	Player* player1;
 	
+	CCLabelTTF *scoreLabel;
+	int score;
+	
 	CCSpriteBatchNode *bossSpriteSheet;
 	CCSpriteBatchNode *playerSpriteSheet;
 }
