@@ -11,7 +11,7 @@
 #import "HelloWorldLayer.h"
 #import "Boss.h"
 #import "Player.h"
-#import "DebugScene.h"
+#import "DebugLayer.h"
 
 // HelloWorldLayer implementation
 @implementation HelloWorldLayer
@@ -64,12 +64,14 @@
 
 -(void)debugButtonTapped:(id)sender
 {
-	DebugScene *debug = [DebugScene node];
-	[debug.debug_layer.randomNumberLimitLabel setString:[NSString stringWithFormat:@"%i",RANDOM_NUMBER_LIMIT]];
-	[debug.debug_layer addControls];
-	NSLog(@"RNDERPLL:%i %i",RANDOM_NUMBER_LIMIT, [[debug.debug_layer.randomNumberLimitLabel string]intValue]);
+	DebugLayer *debug = [DebugLayer node];
+	[debug.randomNumberLimitLabel setString:[NSString stringWithFormat:@"%i",RANDOM_NUMBER_LIMIT]];
+	[debug addControls];
+	[self addChild:debug];
+	
+	
+	//NSLog(@"RNDERPLL:%i %i",RANDOM_NUMBER_LIMIT, [[debug.debug_layer.randomNumberLimitLabel string]intValue]);
 
-	[[CCDirector sharedDirector] pushScene:debug];
 	//RANDOM_NUMBER_LIMIT = [[debug.debug_layer.randomNumberLimitLabel string]intValue];
 }
 
