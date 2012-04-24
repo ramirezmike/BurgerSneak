@@ -17,8 +17,15 @@
 	Boss* boss1;
 	Player* player1;
 	
+	CCMenuItem *debugButton;
+
 	CCLabelTTF *scoreLabel;
+	CCLabelTTF *randomNumberLabel;
+	
 	int score;
+	int RANDOM_NUMBER_LIMIT;
+
+
 	
 	CCSpriteBatchNode *bossSpriteSheet;
 	CCSpriteBatchNode *playerSpriteSheet;
@@ -26,6 +33,7 @@
 
 // returns a CCScene that contains the HelloWorldLayer as the only child
 +(CCScene *) scene;
+-(void)setRandomLimit:(int) limit;
 
 
 @end
