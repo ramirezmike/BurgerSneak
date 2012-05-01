@@ -1,0 +1,12 @@
+This is a simple iPhone game I made using the cocos2D library. You play as a guy eating a salad with your trainer, and when he's not looking you sneak bites from a burger.
+
+Current version: functional
+
+Features to add:
+	-hunger meter to add a time limit
+	-levels and gameover screen
+	-increase difficulty for each level
+	-arms move up and down with touch
+	-randomize "looks" more so it's not so predicatble
+	-add losing points animation
+	-add sounds and music 
