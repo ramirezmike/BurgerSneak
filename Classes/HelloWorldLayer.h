@@ -22,8 +22,11 @@
 	CCLabelTTF *scoreLabel;
 	CCLabelTTF *randomNumberLabel;
 	
+	CCSprite *arms;
+	
 	int score;
 	int RANDOM_NUMBER_LIMIT;
+	BOOL raiseArms;
 
 
 	

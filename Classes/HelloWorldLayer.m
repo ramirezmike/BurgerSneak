@@ -34,13 +34,15 @@
 
 -(void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	player1.state = playerStateEating;
+	raiseArms = TRUE;
+	//player1.state = playerStateEating;
 }
 
 
 
 -(void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
+	raiseArms = FALSE;
 	player1.state = playerStateIdle;
 }
 
@@ -101,6 +103,7 @@
 		[self cacheBossSprites];
 		[self cachePlayerSprites];
 		
+		raiseArms = FALSE;
 		score = 0;
 		RANDOM_NUMBER_LIMIT = 5;
 		scoreLabel = [CCLabelTTF labelWithString:@"" fontName:@"Marker Felt" fontSize:64];
@@ -117,18 +120,23 @@
 		CCSprite *table = [CCSprite spriteWithFile:@"table.png"];
 		table.position = ccp(table.contentSize.width/2, 5);
 		
+		
 		boss1 = [[Boss alloc]initWithPosition:ccp(0,0)];
 		boss1.position = ccp(480 - (boss1.contentSize.width/2), boss1.contentSize.height/2);
 		
 		player1 = [[Player alloc]initWithPosition:ccp(0,0)];
 		player1.position = ccp(player1.contentSize.width/2, player1.contentSize.height/2);
+		arms = [CCSprite spriteWithFile:@"Arms.png"];
+		arms.position = ccp(105,0);
 				
 		[bossSpriteSheet addChild:boss1];
 		[playerSpriteSheet addChild:player1];
+		[self addChild:arms];
 		[self addChild:table];
 
 		[self createDebugButton];
 
+		[self schedule:@selector(armsCheck:)interval:0.1f];
 		[self schedule:@selector(scoreCheck:)interval:0.1f];
 		[self schedule:@selector(eatCheck:)interval:0.1f];
 		[self schedule:@selector(nextFrame:)interval:1.0f];
@@ -136,6 +144,23 @@
 		
 	}
 	return self;
+}
+
+-(void)armsCheck:(ccTime)dt
+{
+	if (raiseArms == TRUE && arms.position.y <= 60) 
+	{
+		arms.position = ccp(arms.position.x,arms.position.y + 10);
+	}
+	else if (raiseArms == TRUE && arms.position.y > 60)
+	{
+		arms.visible = NO;
+		player1.state = playerStateEating;
+	}
+	else if (raiseArms == FALSE && arms.position.y >= 0) {
+		arms.visible = YES;
+		arms.position = ccp(arms.position.x,arms.position.y - 5);
+	}
 }
 -(void)scoreCheck:(ccTime)dt
 {
@@ -189,7 +214,11 @@
 		boss1.state = bossStateIdle;
 	}
 	
-	[self schedule:@selector(nextFrame:)interval:1.0f];
+	double random_int = 50 + arc4random() % 150;
+	float random_float = random_int * 0.01;
+	NSLog(@"%i",random_int);
+	NSLog(@"%f",random_float);
+	[self schedule:@selector(nextFrame:)interval:random_float];
 }
 
 // on "dealloc" you need to release all your retained objects
