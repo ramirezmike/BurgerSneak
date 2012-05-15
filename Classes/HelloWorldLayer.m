@@ -13,6 +13,68 @@
 #import "Player.h"
 #import "DebugLayer.h"
 
+@implementation BackgroundLayer
+
+-(void)addBackground:(ccTime)dt
+{
+	CCSprite *burger = [CCSprite spriteWithFile:@"burger.png"];
+	burger.tag = 1;
+	//[_backgroundDecals addObject:burger];
+	
+	CGSize screenSize = [[CCDirector sharedDirector] winSize];
+	
+	int minX = burger.contentSize.width/2;
+	int maxX = screenSize.width - burger.contentSize.width/2;
+	int rangeX = maxX - minX;
+	int actualX = (arc4random() % rangeX) + minX;
+	
+	burger.position = ccp(actualX, 0);
+	
+	int minTravelDuration = 5;
+	int maxTravelDuration = 12;
+	int rangeTravelDuration = maxTravelDuration - minTravelDuration;
+	int actualTravelDuration = (arc4random() % rangeTravelDuration) + minTravelDuration;
+	
+	int minWidth = burger.contentSize.width * 0.5;
+	int maxWidth = burger.contentSize.width * 3;
+	int rangeWidth = maxWidth - minWidth;
+	int sizeFactor = (arc4random() % rangeWidth) * 0.1;
+	burger.scale = sizeFactor;
+	burger.opacity = 95;
+	
+	[self addChild:burger];
+
+	id actionMove = [CCMoveTo actionWithDuration:actualTravelDuration 
+		position:ccp(actualX, 400)];
+	id actionMoveDone = [CCCallFunc actionWithTarget:self
+		selector:@selector(decalMoveFinished:)];
+		
+	[burger runAction:[CCSequence actions:actionMove, actionMoveDone, nil]];
+}
+
+-(void)decalMoveFinished:(id)sender
+{
+	CCSprite *sprite = (CCSprite *)sender;
+	[self removeChild:sprite cleanup:YES];
+}
+
+-(id)init 
+{
+	if( (self=[super initWithColor:ccc4(100,200,255,255)])) 
+	{
+		[self schedule:@selector(addBackground:)interval:0.7f];
+	}
+	return self;
+}
+
+-(void)dealloc
+{
+	
+	[super dealloc];		
+}
+@end
+
+
 // HelloWorldLayer implementation
 @implementation HelloWorldLayer
 
@@ -23,8 +85,9 @@
 	
 	// 'layer' is an autorelease object.
 	HelloWorldLayer *layer = [HelloWorldLayer node];
-	
+	BackgroundLayer *backlayer = [BackgroundLayer node];
 	// add layer as a child to scene
+	[scene addChild:backlayer];
 	[scene addChild: layer];
 	
 	// return the scene
@@ -115,9 +178,10 @@
 	[self addChild:debugMenu];
 }
 
+
 -(id) init
 {
-	if( (self=[super initWithColor:ccc4(255,255,255,255)])) 
+	if( (self=[super init])) 
 	{
 		self.isTouchEnabled = YES;
 		CGSize screenSize = [[CCDirector sharedDirector] winSize];
@@ -155,6 +219,7 @@
 		player1.position = ccp(player1.contentSize.width/2, player1.contentSize.height/2);
 		arms = [CCSprite spriteWithFile:@"Arms.png"];
 		arms.position = ccp(105,0);
+		
 				
 		[bossSpriteSheet addChild:boss1];
 		[playerSpriteSheet addChild:player1];
@@ -188,7 +253,6 @@
 		NSLog(@"ARM IS WAITING");
 		
 		float waitLength = ARM_WAIT_LENGTH * 0.01;
-		NSLog(@"This is the waitlength: %f",waitLength);
 		[self schedule:@selector(armsCheck:)interval:waitLength];
 	}
 	else if (raiseArms == FALSE && arms.position.y >= 0 && !armIsWaiting) 

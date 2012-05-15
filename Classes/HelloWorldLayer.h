@@ -12,7 +12,18 @@
 @class Boss;
 @class Player;
 
-@interface HelloWorldLayer : CCLayerColor
+@interface BackgroundLayer : CCLayerColor
+{
+	BackgroundLayer *_layer;
+
+}
+
+-(void)addBackground:(ccTime)dt;
+
+@end
+
+
+@interface HelloWorldLayer : CCLayer
 {	
 	Boss* boss1;
 	Player* player1;
@@ -32,8 +43,6 @@
 	
 	BOOL raiseArms;
 	BOOL armIsWaiting;
-
-
 	
 	CCSpriteBatchNode *bossSpriteSheet;
 	CCSpriteBatchNode *playerSpriteSheet;
