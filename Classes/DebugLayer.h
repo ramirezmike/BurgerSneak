@@ -11,6 +11,9 @@
 @interface DebugLayer : CCLayerColor {
 	CCLabelTTF *label;
 	CCLabelTTF *randomNumberLimitLabel;
+	CCLabelTTF *armUpSpeedLabel;
+	CCLabelTTF *armDownSpeedLabel;
+	CCLabelTTF *armWaitLengthLabel;
 	CCMenuItem *debugButton;
 }
 
@@ -20,5 +23,8 @@
 
 @property (nonatomic, retain) CCLabelTTF *label;
 @property (nonatomic, retain) CCLabelTTF *randomNumberLimitLabel;
+@property (nonatomic, retain) CCLabelTTF *armUpSpeedLabel;
+@property (nonatomic, retain) CCLabelTTF *armDownSpeedLabel;
+@property (nonatomic, retain) CCLabelTTF *armWaitLengthLabel;
 
 @end

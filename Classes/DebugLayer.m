@@ -12,6 +12,9 @@
 @implementation DebugLayer
 @synthesize label;
 @synthesize randomNumberLimitLabel = randomNumberLimitLabel;
+@synthesize armUpSpeedLabel = armUpSpeedLabel;
+@synthesize armDownSpeedLabel = armDownSpeedLabel;
+@synthesize armWaitLengthLabel = armWaitLengthLabel;
 
 -(void)increaseControl:(id)sender
 {
@@ -69,6 +72,10 @@
 -(void)debugButtonTapped:(id)sender
 {
 	[(HelloWorldLayer*)self.parent setRandomLimit:[[randomNumberLimitLabel string]intValue]];
+	[(HelloWorldLayer*)self.parent setArmUpSpeed:[[armUpSpeedLabel string]intValue]];
+	[(HelloWorldLayer*)self.parent setArmDownSpeed:[[armDownSpeedLabel string]intValue]];
+	[(HelloWorldLayer*)self.parent setArmWaitLength:[[armWaitLengthLabel string]intValue]];
+	
 	[self.parent removeChild:self cleanup:TRUE];
 }
 
@@ -82,6 +89,15 @@
 		
 		self.randomNumberLimitLabel = [CCLabelTTF labelWithString:@"" fontName:@"Arial" fontSize:18];
 		randomNumberLimitLabel.color = ccc3(0,0,0);
+		
+		self.armUpSpeedLabel = [CCLabelTTF labelWithString:@"" fontName:@"Arial" fontSize:18];
+		armUpSpeedLabel.color = ccc3(0,0,0);
+		
+		self.armDownSpeedLabel = [CCLabelTTF labelWithString:@"" fontName:@"Arial" fontSize:18];
+		armDownSpeedLabel.color = ccc3(0,0,0);
+		
+		self.armWaitLengthLabel = [CCLabelTTF labelWithString:@"" fontName:@"Arial" fontSize:18];
+		armWaitLengthLabel.color = ccc3(0,0,0);
 		
 		label.opacity = 40;
 		label.position = ccp(winSize.width/2, winSize.height/2);
@@ -97,6 +113,10 @@
 -(void)addControls
 {
 	[self addControl:randomNumberLimitLabel withHeight:300];
+	[self addControl:armUpSpeedLabel withHeight:270];
+	[self addControl:armDownSpeedLabel withHeight:250];
+	[self addControl:armWaitLengthLabel withHeight:220];
+
 }
 
 -(void)dealloc

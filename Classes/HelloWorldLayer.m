@@ -34,8 +34,10 @@
 
 -(void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	raiseArms = TRUE;
-	//player1.state = playerStateEating;
+	if (!armIsWaiting) 
+	{
+		raiseArms = TRUE;
+	}
 }
 
 
@@ -43,6 +45,7 @@
 -(void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	raiseArms = FALSE;
+	arms.visible = YES;
 	player1.state = playerStateIdle;
 }
 
@@ -68,6 +71,10 @@
 {
 	DebugLayer *debug = [DebugLayer node];
 	[debug.randomNumberLimitLabel setString:[NSString stringWithFormat:@"%i",RANDOM_NUMBER_LIMIT]];
+	[debug.armUpSpeedLabel setString:[NSString stringWithFormat:@"%i",ARM_UP_SPEED]];
+	[debug.armDownSpeedLabel setString:[NSString stringWithFormat:@"%i",ARM_DOWN_SPEED]];
+	[debug.armWaitLengthLabel setString:[NSString stringWithFormat:@"%i",ARM_WAIT_LENGTH]];
+
 	[debug addControls];
 	[self addChild:debug];
 	
@@ -80,6 +87,21 @@
 -(void)setRandomLimit:(int) limit
 {
 	RANDOM_NUMBER_LIMIT = limit;
+}
+
+-(void)setArmUpSpeed:(int) speed
+{
+	ARM_UP_SPEED = speed;
+}
+
+-(void)setArmDownSpeed:(int) speed
+{
+	ARM_DOWN_SPEED = speed;
+}
+
+-(void)setArmWaitLength:(int) time
+{
+	ARM_WAIT_LENGTH = time;
 }
 
 -(void)createDebugButton
@@ -105,7 +127,12 @@
 		
 		raiseArms = FALSE;
 		score = 0;
+		
 		RANDOM_NUMBER_LIMIT = 5;
+		ARM_UP_SPEED = 10;
+		ARM_DOWN_SPEED = 5;
+		ARM_WAIT_LENGTH = 70;
+		
 		scoreLabel = [CCLabelTTF labelWithString:@"" fontName:@"Marker Felt" fontSize:64];
 		randomNumberLabel = [CCLabelTTF labelWithString:@"" fontName:@"Marker Felt" fontSize:15];
 		[scoreLabel setString:[NSString stringWithFormat:@"%i",score]];
@@ -136,7 +163,7 @@
 
 		[self createDebugButton];
 
-		[self schedule:@selector(armsCheck:)interval:0.1f];
+		[self schedule:@selector(armsCheck:)interval:0.7f];
 		[self schedule:@selector(scoreCheck:)interval:0.1f];
 		[self schedule:@selector(eatCheck:)interval:0.1f];
 		[self schedule:@selector(nextFrame:)interval:1.0f];
@@ -148,18 +175,32 @@
 
 -(void)armsCheck:(ccTime)dt
 {
-	if (raiseArms == TRUE && arms.position.y <= 60) 
+	if (raiseArms == TRUE && arms.position.y <= 60 && !armIsWaiting) 
 	{
-		arms.position = ccp(arms.position.x,arms.position.y + 10);
+		arms.position = ccp(arms.position.x,arms.position.y + ARM_UP_SPEED);
+		[self schedule:@selector(armsCheck:)interval:0.1f];
 	}
-	else if (raiseArms == TRUE && arms.position.y > 60)
+	else if (raiseArms == TRUE && arms.position.y > 60 && !armIsWaiting)
 	{
 		arms.visible = NO;
 		player1.state = playerStateEating;
+		armIsWaiting = TRUE;
+		NSLog(@"ARM IS WAITING");
+		
+		float waitLength = ARM_WAIT_LENGTH * 0.01;
+		NSLog(@"This is the waitlength: %f",waitLength);
+		[self schedule:@selector(armsCheck:)interval:waitLength];
 	}
-	else if (raiseArms == FALSE && arms.position.y >= 0) {
-		arms.visible = YES;
-		arms.position = ccp(arms.position.x,arms.position.y - 5);
+	else if (raiseArms == FALSE && arms.position.y >= 0 && !armIsWaiting) 
+	{
+		arms.position = ccp(arms.position.x,arms.position.y - ARM_DOWN_SPEED);
+		[self schedule:@selector(armsCheck:)interval:0.1f];
+	}
+	else if (armIsWaiting == TRUE)
+	{
+		armIsWaiting = FALSE;
+		NSLog(@"ARM IS NO LONGER WAITING");
+		return;
 	}
 }
 -(void)scoreCheck:(ccTime)dt

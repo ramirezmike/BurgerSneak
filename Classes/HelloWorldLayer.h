@@ -26,7 +26,12 @@
 	
 	int score;
 	int RANDOM_NUMBER_LIMIT;
+	int ARM_UP_SPEED;
+	int ARM_DOWN_SPEED;
+	int ARM_WAIT_LENGTH;
+	
 	BOOL raiseArms;
+	BOOL armIsWaiting;
 
 
 	
@@ -37,6 +42,9 @@
 // returns a CCScene that contains the HelloWorldLayer as the only child
 +(CCScene *) scene;
 -(void)setRandomLimit:(int) limit;
+-(void)setArmUpSpeed:(int) speed;
+-(void)setArmDownSpeed:(int) speed;
+-(void)setArmWaitLength:(int) time;
 
 
 @end
