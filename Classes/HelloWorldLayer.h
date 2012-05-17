@@ -12,9 +12,11 @@
 @class Boss;
 @class Player;
 
-@interface BackgroundLayer : CCLayerColor
+@interface BackgroundLayer : CCLayer
 {
 	BackgroundLayer *_layer;
+	CCTMXTiledMap* background1;
+	CCTMXTiledMap* background2;
 
 }
 

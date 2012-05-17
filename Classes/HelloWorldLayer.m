@@ -15,12 +15,27 @@
 
 @implementation BackgroundLayer
 
+-(void)scrollBackground:(ccTime)dt
+{	
+	if (background1.position.y - background1.contentSize.height/2 < 0 - background1.contentSize.height) 
+	{
+        background1.position = ccp(0, background2.position.y + background2.contentSize.height/2);
+    }
+    else if (background2.position.y - background2.contentSize.height/2 < 0 - background2.contentSize.height) 
+	{
+        background2.position = ccp(0, background1.position.y + background1.contentSize.height/2);
+    }
+	else
+	{
+		background1.position = ccp( background1.position.x, background1.position.y - 40*dt);
+		background2.position = ccp( background2.position.x, background2.position.y - 40*dt);
+	}
+
+}
+
 -(void)addBackground:(ccTime)dt
 {
-	CCSprite *burger = [CCSprite spriteWithFile:@"burger.png"];
-	burger.tag = 1;
-	//[_backgroundDecals addObject:burger];
-	
+	CCSprite *burger = [CCSprite spriteWithFile:@"burger1.png"];	
 	CGSize screenSize = [[CCDirector sharedDirector] winSize];
 	
 	int minX = burger.contentSize.width/2;
@@ -40,7 +55,7 @@
 	int rangeWidth = maxWidth - minWidth;
 	int sizeFactor = (arc4random() % rangeWidth) * 0.1;
 	burger.scale = sizeFactor;
-	burger.opacity = 95;
+	//burger.opacity = 95;
 	
 	[self addChild:burger];
 
@@ -60,16 +75,26 @@
 
 -(id)init 
 {
-	if( (self=[super initWithColor:ccc4(100,200,255,255)])) 
+	if( (self=[super init])) 
 	{
+		background1 = [CCTMXTiledMap tiledMapWithTMXFile:@"background.tmx"];
+		background2 = [CCTMXTiledMap tiledMapWithTMXFile:@"background.tmx"];
+		
+		background1.position = ccp(0, 0);
+		background2.position = ccp(0, 160);
+
+		[self schedule:@selector(scrollBackground:)];
 		[self schedule:@selector(addBackground:)interval:0.7f];
+		[self addChild:background1];
+		[self addChild:background2];
 	}
 	return self;
 }
 
 -(void)dealloc
 {
-	
+	[background1 release];
+	[background2 release];
 	[super dealloc];		
 }
 @end
