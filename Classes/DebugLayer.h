@@ -14,6 +14,7 @@
 	CCLabelTTF *armUpSpeedLabel;
 	CCLabelTTF *armDownSpeedLabel;
 	CCLabelTTF *armWaitLengthLabel;
+	CCLabelTTF *holdControlLabel;
 	CCMenuItem *debugButton;
 }
 
@@ -26,5 +27,7 @@
 @property (nonatomic, retain) CCLabelTTF *armUpSpeedLabel;
 @property (nonatomic, retain) CCLabelTTF *armDownSpeedLabel;
 @property (nonatomic, retain) CCLabelTTF *armWaitLengthLabel;
+@property (nonatomic, retain) CCLabelTTF *holdControlLabel;
+
 
 @end

@@ -15,6 +15,7 @@
 @synthesize armUpSpeedLabel = armUpSpeedLabel;
 @synthesize armDownSpeedLabel = armDownSpeedLabel;
 @synthesize armWaitLengthLabel = armWaitLengthLabel;
+@synthesize holdControlLabel = holdControlLabel;
 
 -(void)increaseControl:(id)sender
 {
@@ -75,7 +76,8 @@
 	[(HelloWorldLayer*)self.parent setArmUpSpeed:[[armUpSpeedLabel string]intValue]];
 	[(HelloWorldLayer*)self.parent setArmDownSpeed:[[armDownSpeedLabel string]intValue]];
 	[(HelloWorldLayer*)self.parent setArmWaitLength:[[armWaitLengthLabel string]intValue]];
-	
+	[(HelloWorldLayer*)self.parent setControls:[[holdControlLabel string]boolValue]];
+
 	[self.parent removeChild:self cleanup:TRUE];
 }
 
@@ -99,6 +101,9 @@
 		self.armWaitLengthLabel = [CCLabelTTF labelWithString:@"" fontName:@"Arial" fontSize:18];
 		armWaitLengthLabel.color = ccc3(0,0,0);
 		
+		self.holdControlLabel = [CCLabelTTF labelWithString:@"" fontName:@"Arial" fontSize:18];
+		holdControlLabel.color = ccc3(0,0,0);
+		
 		label.opacity = 40;
 		label.position = ccp(winSize.width/2, winSize.height/2);
 		
@@ -116,6 +121,8 @@
 	[self addControl:armUpSpeedLabel withHeight:270];
 	[self addControl:armDownSpeedLabel withHeight:250];
 	[self addControl:armWaitLengthLabel withHeight:220];
+	[self addControl:holdControlLabel withHeight:180];
+
 
 }
 

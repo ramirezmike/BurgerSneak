@@ -102,7 +102,7 @@
 		raiseArms = TRUE;
 	}
 	
-	else if (raiseArms)
+	else if (raiseArms && !HOLD_CONTROL)
 	{
 		raiseArms = FALSE;
 		arms.visible = YES;
@@ -114,9 +114,12 @@
 
 -(void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-//	raiseArms = FALSE;
-//	arms.visible = YES;
-//	player1.state = playerStateIdle;
+	if (HOLD_CONTROL) 
+	{
+		raiseArms = FALSE;
+		arms.visible = YES;
+		player1.state = playerStateIdle;
+	}
 }
 
 -(void)cacheSprites
@@ -136,6 +139,8 @@
 	[debug.armUpSpeedLabel setString:[NSString stringWithFormat:@"%i",ARM_UP_SPEED]];
 	[debug.armDownSpeedLabel setString:[NSString stringWithFormat:@"%i",ARM_DOWN_SPEED]];
 	[debug.armWaitLengthLabel setString:[NSString stringWithFormat:@"%i",ARM_WAIT_LENGTH]];
+	[debug.holdControlLabel setString:[NSString stringWithFormat:@"%i",HOLD_CONTROL]];
+
 
 	[debug addControls];
 	[self addChild:debug];
@@ -166,6 +171,11 @@
 	ARM_WAIT_LENGTH = time;
 }
 
+-(void)setControls:(BOOL) holdControl
+{
+	HOLD_CONTROL = holdControl;
+}
+
 -(void)createDebugButton
 {
 	debugButton = [CCMenuItemImage
@@ -194,6 +204,7 @@
 		ARM_UP_SPEED = 10;
 		ARM_DOWN_SPEED = 5;
 		ARM_WAIT_LENGTH = 0;
+		HOLD_CONTROL = TRUE;
 		
 		scoreLabel = [CCLabelTTF labelWithString:@"" fontName:@"Marker Felt" fontSize:64];
 		randomNumberLabel = [CCLabelTTF labelWithString:@"" fontName:@"Marker Felt" fontSize:15];

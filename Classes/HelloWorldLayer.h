@@ -43,7 +43,7 @@
 	
 	BOOL raiseArms;
 	BOOL armIsWaiting;
-	BOOL tapControl;
+	BOOL HOLD_CONTROL;
 
 	CCSpriteBatchNode *artSpriteSheet;
 	CCSpriteBatchNode *bossSpriteSheet;
@@ -56,6 +56,7 @@
 -(void)setArmUpSpeed:(int) speed;
 -(void)setArmDownSpeed:(int) speed;
 -(void)setArmWaitLength:(int) time;
+-(void)setControls:(BOOL) holdControl;
 
 
 @end
