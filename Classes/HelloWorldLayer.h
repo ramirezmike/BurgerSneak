@@ -43,6 +43,7 @@
 	
 	BOOL raiseArms;
 	BOOL armIsWaiting;
+	BOOL tapControl;
 
 	CCSpriteBatchNode *artSpriteSheet;
 	CCSpriteBatchNode *bossSpriteSheet;

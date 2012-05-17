@@ -97,9 +97,16 @@
 
 -(void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	if (!armIsWaiting) 
+	if (!armIsWaiting && !raiseArms) 
 	{
 		raiseArms = TRUE;
+	}
+	
+	else if (raiseArms)
+	{
+		raiseArms = FALSE;
+		arms.visible = YES;
+		player1.state = playerStateIdle;
 	}
 }
 
@@ -107,9 +114,9 @@
 
 -(void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	raiseArms = FALSE;
-	arms.visible = YES;
-	player1.state = playerStateIdle;
+//	raiseArms = FALSE;
+//	arms.visible = YES;
+//	player1.state = playerStateIdle;
 }
 
 -(void)cacheSprites
@@ -121,23 +128,6 @@
 	[self addChild:artSpriteSheet];
 }
 
--(void)cacheBossSprites
-{
-	[[CCSpriteFrameCache sharedSpriteFrameCache]addSpriteFramesWithFile:
-	 @"Boss_Sprite_Sheet.plist"];
-	bossSpriteSheet = [CCSpriteBatchNode 
-					   batchNodeWithFile:@"Boss_Sprite_Sheet.png"];
-	[self addChild:bossSpriteSheet];
-}
-
--(void)cachePlayerSprites
-{
-	[[CCSpriteFrameCache sharedSpriteFrameCache]addSpriteFramesWithFile:
-	 @"Player_Sprite_Sheet.plist"];
-	playerSpriteSheet = [CCSpriteBatchNode 
-						 batchNodeWithFile:@"Player_Sprite_Sheet.png"];
-	[self addChild:playerSpriteSheet];	
-}
 
 -(void)debugButtonTapped:(id)sender
 {
@@ -196,16 +186,14 @@
 		CGSize screenSize = [[CCDirector sharedDirector] winSize];
 		
 		[self cacheSprites];
-		[self cacheBossSprites];
-		[self cachePlayerSprites];
 		
 		raiseArms = FALSE;
 		score = 0;
 		
-		RANDOM_NUMBER_LIMIT = 5;
+		RANDOM_NUMBER_LIMIT = 3;
 		ARM_UP_SPEED = 10;
 		ARM_DOWN_SPEED = 5;
-		ARM_WAIT_LENGTH = 70;
+		ARM_WAIT_LENGTH = 0;
 		
 		scoreLabel = [CCLabelTTF labelWithString:@"" fontName:@"Marker Felt" fontSize:64];
 		randomNumberLabel = [CCLabelTTF labelWithString:@"" fontName:@"Marker Felt" fontSize:15];
@@ -232,7 +220,7 @@
 		
 
 		arms = [CCSprite spriteWithFile:@"pArms.png"]; 
-		arms.position = ccp(100,0);
+		arms.position = ccp(100,50);
 		arms.scale = 0.8;
 
 		[artSpriteSheet addChild:boss1];
@@ -271,7 +259,7 @@
 		float waitLength = ARM_WAIT_LENGTH * 0.01;
 		[self schedule:@selector(armsCheck:)interval:waitLength];
 	}
-	else if (raiseArms == FALSE && arms.position.y >= 0 && !armIsWaiting) 
+	else if (raiseArms == FALSE && arms.position.y >= 50 && !armIsWaiting) 
 	{
 		arms.position = ccp(arms.position.x,arms.position.y - ARM_DOWN_SPEED);
 		player1.state = playerStateIdle;
@@ -325,7 +313,6 @@
 		return;
 	}
 	int random_number = arc4random() % RANDOM_NUMBER_LIMIT;
-	NSLog(@"%i", random_number);
 	[randomNumberLabel setString:[NSString stringWithFormat:@"RNG:%i",random_number]];
 	if (random_number == 0) 
 	{
@@ -338,8 +325,7 @@
 	
 	double random_int = 50 + arc4random() % 150;
 	float random_float = random_int * 0.01;
-	NSLog(@"%i",random_int);
-	NSLog(@"%f",random_float);
+
 	[self schedule:@selector(nextFrame:)interval:random_float];
 }
 
