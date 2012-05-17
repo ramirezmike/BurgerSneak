@@ -112,6 +112,15 @@
 	player1.state = playerStateIdle;
 }
 
+-(void)cacheSprites
+{
+	[[CCSpriteFrameCache sharedSpriteFrameCache]addSpriteFramesWithFile:
+		@"EatArt.plist"];
+	artSpriteSheet = [CCSpriteBatchNode
+					batchNodeWithFile:@"EatArt.png"];
+	[self addChild:artSpriteSheet];
+}
+
 -(void)cacheBossSprites
 {
 	[[CCSpriteFrameCache sharedSpriteFrameCache]addSpriteFramesWithFile:
@@ -186,6 +195,7 @@
 		self.isTouchEnabled = YES;
 		CGSize screenSize = [[CCDirector sharedDirector] winSize];
 		
+		[self cacheSprites];
 		[self cacheBossSprites];
 		[self cachePlayerSprites];
 		
@@ -214,15 +224,20 @@
 		
 		boss1 = [[Boss alloc]initWithPosition:ccp(0,0)];
 		boss1.position = ccp(480 - (boss1.contentSize.width/2), boss1.contentSize.height/2);
+		boss1.scale = 0.8;
 		
 		player1 = [[Player alloc]initWithPosition:ccp(0,0)];
 		player1.position = ccp(player1.contentSize.width/2, player1.contentSize.height/2);
-		arms = [CCSprite spriteWithFile:@"Arms.png"];
-		arms.position = ccp(105,0);
+		player1.scale = 0.8;
 		
-				
-		[bossSpriteSheet addChild:boss1];
-		[playerSpriteSheet addChild:player1];
+
+		arms = [CCSprite spriteWithFile:@"pArms.png"]; 
+		arms.position = ccp(100,0);
+		arms.scale = 0.8;
+
+		[artSpriteSheet addChild:boss1];
+		[artSpriteSheet addChild:player1];
+		
 		[self addChild:arms];
 		[self addChild:table];
 
@@ -240,12 +255,13 @@
 
 -(void)armsCheck:(ccTime)dt
 {
-	if (raiseArms == TRUE && arms.position.y <= 60 && !armIsWaiting) 
+	if (raiseArms == TRUE && arms.position.y <= player1.position.y && !armIsWaiting) 
 	{
 		arms.position = ccp(arms.position.x,arms.position.y + ARM_UP_SPEED);
+		player1.state = playerStateAnticipation;
 		[self schedule:@selector(armsCheck:)interval:0.1f];
 	}
-	else if (raiseArms == TRUE && arms.position.y > 60 && !armIsWaiting)
+	else if (raiseArms == TRUE && arms.position.y > player1.position.y && !armIsWaiting)
 	{
 		arms.visible = NO;
 		player1.state = playerStateEating;
@@ -258,6 +274,7 @@
 	else if (raiseArms == FALSE && arms.position.y >= 0 && !armIsWaiting) 
 	{
 		arms.position = ccp(arms.position.x,arms.position.y - ARM_DOWN_SPEED);
+		player1.state = playerStateIdle;
 		[self schedule:@selector(armsCheck:)interval:0.1f];
 	}
 	else if (armIsWaiting == TRUE)

@@ -43,7 +43,8 @@
 	
 	BOOL raiseArms;
 	BOOL armIsWaiting;
-	
+
+	CCSpriteBatchNode *artSpriteSheet;
 	CCSpriteBatchNode *bossSpriteSheet;
 	CCSpriteBatchNode *playerSpriteSheet;
 }

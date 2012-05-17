@@ -14,7 +14,7 @@
 
 -(id)initWithPosition:(CGPoint)pos
 {
-	if ((self = [super initWithSpriteFrameName:@"boss1.png"])) 
+	if ((self = [super initWithSpriteFrameName:@"bIdle0.png"])) 
 	{
 		[self createAnimation];
 		self.position = pos;
@@ -36,11 +36,11 @@
 	switch (state) {
 		case bossStateShock:
 			[self setDisplayFrame:[[CCSpriteFrameCache sharedSpriteFrameCache]
-					spriteFrameByName:@"boss4.png"]];
+					spriteFrameByName:@"bShock0.png"]];
 			break;
 		case bossStateLook:
 			[self setDisplayFrame:[[CCSpriteFrameCache sharedSpriteFrameCache]
-					spriteFrameByName:@"boss3.png"]];
+					spriteFrameByName:@"bLook0.png"]];
 			break;
 		default:
 			[self runAction:bossIdleAction];
@@ -52,11 +52,11 @@
 -(void)createAnimation
 {
 	NSMutableArray *idleAnimFrames = [[NSMutableArray alloc]init];
-	for (int i = 1; i<=2;i++)
+	for (int i = 0; i<=2;i++)
 	{
 		[idleAnimFrames addObject:
 			[[CCSpriteFrameCache sharedSpriteFrameCache]spriteFrameByName:
-			[NSString stringWithFormat:@"boss%d.png",i]]];
+			[NSString stringWithFormat:@"bIdle%d.png",i]]];
 	}
 	CCAnimation *idleAnim = [[CCAnimation alloc]initWithFrames:
 				idleAnimFrames delay:1.0f];
