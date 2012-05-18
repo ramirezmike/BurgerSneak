@@ -36,12 +36,15 @@
 	CCLabelTTF *randomNumberLabel;
 	
 	CCSprite *arms;
+	CCSprite *scoreBar;
 	
 	int score;
 	int RANDOM_NUMBER_LIMIT;
 	int ARM_UP_SPEED;
 	int ARM_DOWN_SPEED;
 	int ARM_WAIT_LENGTH;
+	int SCORE_INCREASE_SPEED;
+	int SCORE_DECREASE_SPEED;
 	
 	BOOL raiseArms;
 	BOOL armIsWaiting;

@@ -230,16 +230,13 @@
 		ARM_DOWN_SPEED = 5;
 		ARM_WAIT_LENGTH = 0;
 		HOLD_CONTROL = TRUE;
+		SCORE_INCREASE_SPEED = 5;
+		SCORE_DECREASE_SPEED = 20;
 		
-		scoreLabel = [CCLabelTTF labelWithString:@"" fontName:@"Marker Felt" fontSize:64];
 		randomNumberLabel = [CCLabelTTF labelWithString:@"" fontName:@"Marker Felt" fontSize:15];
-		[scoreLabel setString:[NSString stringWithFormat:@"%i",score]];
 		randomNumberLabel.color = ccc3(0,0,0);
-		scoreLabel.color = ccc3(0,0,0);
-		scoreLabel.position = ccp(screenSize.width/2, screenSize.height - 30);
 		randomNumberLabel.position = ccp(screenSize.width - 50, screenSize.height - 50);
 		[self addChild:randomNumberLabel];
-		[self addChild:scoreLabel];
 		
 		
 		CCSprite *table = [CCSprite spriteWithFile:@"table.png"];
@@ -259,9 +256,15 @@
 		arms.position = ccp(100,50);
 		arms.scale = 0.8;
 
+		scoreBar = [CCSprite spriteWithFile:@"scoreBar.png"];
+		scoreBar.position = ccp(50,300);
+		scoreBar.anchorPoint = ccp(0,1);
+		scoreBar.scale = 10;
+
 		[artSpriteSheet addChild:boss1];
 		[artSpriteSheet addChild:player1];
 		
+		[self addChild:scoreBar];
 		[self addChild:arms];
 		[self addChild:table];
 
@@ -290,7 +293,6 @@
 		arms.visible = NO;
 		player1.state = playerStateEating;
 		armIsWaiting = TRUE;
-		NSLog(@"ARM IS WAITING");
 		
 		float waitLength = ARM_WAIT_LENGTH * 0.01;
 		[self schedule:@selector(armsCheck:)interval:waitLength];
@@ -312,19 +314,13 @@
 {
 	if (player1.state == playerStateEating && !boss1.state == bossStateLook) 
 	{
-		scoreLabel.color = ccc3(0,255,0);
-		score++;
-		if (score > 100) 
+		score += SCORE_INCREASE_SPEED;
+		if (score > 350) 
 		{
-			score = 100;
+			score = 350;
 		}
-		[scoreLabel setString:[NSString stringWithFormat:@"%i",score]];
+		scoreBar.scaleX = score;
 	}
-	else if (!player1.state == playerStateEating && !boss1.state == bossStateLook)
-	{
-		scoreLabel.color = ccc3(0,0,0);
-	}
-
 }
 -(void)eatCheck:(ccTime)dt
 {
@@ -338,13 +334,13 @@
 -(void)nextFrame:(ccTime)dt
 {
 	if (player1.state == playerStateEating && boss1.state == bossStateShock) {
-		scoreLabel.color = ccc3(255,0,0);
-		score -= 5;
-		if (score < 0) 
+		score -= SCORE_DECREASE_SPEED;
+		if (score < 10) 
 		{
-			score = 0;
+			score = 10;
 		}
-		[scoreLabel setString:[NSString stringWithFormat:@"%i",score]];
+		scoreBar.scaleX = score;
+
 		[self schedule:@selector(nextFrame:)interval:0.1f];
 		return;
 	}
