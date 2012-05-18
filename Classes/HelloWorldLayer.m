@@ -30,7 +30,17 @@
 		background1.position = ccp( background1.position.x, background1.position.y - 40*dt);
 		background2.position = ccp( background2.position.x, background2.position.y - 40*dt);
 	}
+}
 
+-(void)removeDecals:(ccTime)dt
+{
+	for (CCSprite *burger in _burgers) 
+	{
+		if (burger.position.y > 380) 
+		{
+			[self removeChild:burger cleanup:YES];
+		}
+	}
 }
 
 -(void)addBackground:(ccTime)dt
@@ -43,7 +53,9 @@
 	int rangeX = maxX - minX;
 	int actualX = (arc4random() % rangeX) + minX;
 	
+	//burger.tag = 0;
 	burger.position = ccp(actualX, 0);
+	[_burgers addObject:burger];
 	
 	int minTravelDuration = 5;
 	int maxTravelDuration = 12;
@@ -61,22 +73,24 @@
 
 	id actionMove = [CCMoveTo actionWithDuration:actualTravelDuration 
 		position:ccp(actualX, 400)];
-	id actionMoveDone = [CCCallFunc actionWithTarget:self
-		selector:@selector(decalMoveFinished:)];
-		
-	[burger runAction:[CCSequence actions:actionMove, actionMoveDone, nil]];
+
+	[burger runAction:[CCSequence actions:actionMove, nil]];
 }
 
 -(void)decalMoveFinished:(id)sender
 {
-	CCSprite *sprite = (CCSprite *)sender;
-	[self removeChild:sprite cleanup:YES];
+	//CCSprite *sprite = (CCSprite *)sender;
+	//NSLog(@"TAG: %i",sprite.tag);
+
+	[self removeChild:sender cleanup:YES];
+	//[sender release];
 }
 
 -(id)init 
 {
 	if( (self=[super init])) 
 	{
+		_burgers = [[NSMutableArray alloc]init];
 		background1 = [CCTMXTiledMap tiledMapWithTMXFile:@"background.tmx"];
 		background2 = [CCTMXTiledMap tiledMapWithTMXFile:@"background.tmx"];
 		
@@ -85,6 +99,7 @@
 
 		[self schedule:@selector(scrollBackground:)];
 		[self schedule:@selector(addBackground:)interval:0.7f];
+		[self schedule:@selector(removeDecals:)interval:1.0f];
 		[self addChild:background1];
 		[self addChild:background2];
 	}
@@ -169,11 +184,6 @@
 
 	[debug addControls];
 	[self addChild:debug];
-	
-	
-	//NSLog(@"RNDERPLL:%i %i",RANDOM_NUMBER_LIMIT, [[debug.debug_layer.randomNumberLimitLabel string]intValue]);
-
-	//RANDOM_NUMBER_LIMIT = [[debug.debug_layer.randomNumberLimitLabel string]intValue];
 }
 
 -(void)setRandomLimit:(int) limit
@@ -239,7 +249,7 @@
 		[self addChild:randomNumberLabel];
 		
 		
-		CCSprite *table = [CCSprite spriteWithFile:@"table.png"];
+		table = [CCSprite spriteWithFile:@"table.png"];
 		table.position = ccp(table.contentSize.width/2, 5);
 		
 		
@@ -274,7 +284,6 @@
 		[self schedule:@selector(scoreCheck:)interval:0.1f];
 		[self schedule:@selector(eatCheck:)interval:0.1f];
 		[self schedule:@selector(nextFrame:)interval:1.0f];
-
 		
 	}
 	return self;
@@ -306,7 +315,6 @@
 	else if (armIsWaiting == TRUE)
 	{
 		armIsWaiting = FALSE;
-		NSLog(@"ARM IS NO LONGER WAITING");
 		return;
 	}
 }
@@ -365,10 +373,18 @@
 - (void) dealloc
 {
 	// in case you have something to dealloc, do it in this method
-	// in this particular example nothing needs to be released.
-	// cocos2d will automatically release all the children (Label)
 	[player1 release];
 	[boss1 release];
+	[table release];
+	[debugButton release];
+	[scoreLabel release];
+	[randomNumberLabel release];
+	[arms release];
+	[scoreBar release];
+	[table release];
+	[artSpriteSheet release];
+	[bossSpriteSheet release];
+	[playerSpriteSheet release];
 	
 	// don't forget to call "super dealloc"
 	[super dealloc];

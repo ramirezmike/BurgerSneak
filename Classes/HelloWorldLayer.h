@@ -15,6 +15,7 @@
 @interface BackgroundLayer : CCLayer
 {
 	BackgroundLayer *_layer;
+	NSMutableArray *_burgers;
 	CCTMXTiledMap* background1;
 	CCTMXTiledMap* background2;
 
@@ -37,6 +38,7 @@
 	
 	CCSprite *arms;
 	CCSprite *scoreBar;
+	CCSprite *table;
 	
 	int score;
 	int RANDOM_NUMBER_LIMIT;
