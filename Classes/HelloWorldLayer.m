@@ -53,7 +53,6 @@
 	int rangeX = maxX - minX;
 	int actualX = (arc4random() % rangeX) + minX;
 	
-	//burger.tag = 0;
 	burger.position = ccp(actualX, 0);
 	[_burgers addObject:burger];
 	
@@ -77,15 +76,6 @@
 	[burger runAction:[CCSequence actions:actionMove, nil]];
 }
 
--(void)decalMoveFinished:(id)sender
-{
-	//CCSprite *sprite = (CCSprite *)sender;
-	//NSLog(@"TAG: %i",sprite.tag);
-
-	[self removeChild:sender cleanup:YES];
-	//[sender release];
-}
-
 -(id)init 
 {
 	if( (self=[super init])) 
@@ -99,7 +89,7 @@
 
 		[self schedule:@selector(scrollBackground:)];
 		[self schedule:@selector(addBackground:)interval:0.7f];
-		[self schedule:@selector(removeDecals:)interval:1.0f];
+		[self schedule:@selector(removeDecals:)interval:10.0f];
 		[self addChild:background1];
 		[self addChild:background2];
 	}
@@ -110,6 +100,7 @@
 {
 	[background1 release];
 	[background2 release];
+	[_burgers release];
 	[super dealloc];		
 }
 @end
@@ -239,7 +230,7 @@
 		ARM_UP_SPEED = 10;
 		ARM_DOWN_SPEED = 5;
 		ARM_WAIT_LENGTH = 0;
-		HOLD_CONTROL = TRUE;
+		HOLD_CONTROL = FALSE;
 		SCORE_INCREASE_SPEED = 5;
 		SCORE_DECREASE_SPEED = 20;
 		
